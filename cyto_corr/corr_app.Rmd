@@ -1,0 +1,113 @@
+---
+title: "Correlation Dashboard"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: fill
+runtime: shiny
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(shiny)
+library(naniar)
+library(plotly)
+library(amlprojectdata)
+library(dplyr)
+library(reactable)
+
+load("data/data.RData")
+drug_names <- names(drug_list)
+cyto_names <- names(cyto_list)
+
+correlations <- correlations %>%
+  select(Cytokine = Var2, Drug=Var1, correlation, FDR=fdr) %>%
+  mutate(correlation = signif(correlation, 3), FDR = signif(FDR, 3)) %>%
+  filter(FDR < 0.1)
+
+
+```
+
+Column {data-width=400}
+-----------------------------------------------------------------------
+
+### Correlation Table
+
+```{r}
+corrs <- reactive({
+  correlations %>%
+    filter(FDR < input$fdr)
+})
+
+
+fillCol(flex=c(NA,1), 
+        inputPanel(
+  sliderInput("fdr", "FDR Cutoff", min=0, max=1, value=0.05)
+),
+
+reactable(correlations, sortable = TRUE, pageSizeOptions = 100, 
+          onClick = JS("function(rowInfo, colInfo){
+            if (window.Shiny){
+            Shiny.setInputValue('click_row:row_click', {row_num: rowInfo.index + 1})
+            }
+            }")
+          
+          
+          )
+)
+
+
+
+```
+
+Column {data-width=500}
+-----------------------------------------------------------------------
+
+### Chart B
+
+```{r}
+fillCol(flex=c(NA,1),
+  inputPanel(
+    selectInput("drug", "Select Drug of Interest", choices = drug_names, selected = drug_names[1]),
+    selectInput("cytokine", "Select Cytokine of Interest", choices = cyto_names, selected=cyto_names[[1]])
+  ),
+  plotOutput("corr_plot")
+)
+
+  combo <- reactive({
+    Var2 <- input$cytokine
+    Var1 <- input$drug
+    
+    out_list <- list(Var1=Var1, Var2=Var2)
+    
+    return(out_list)
+  })
+
+convert_row_to_input <- function(x, session, inputname){
+  row_num <- x[["row_num"]]
+  return(correlations[row_num,])
+}
+
+registerInputHandler("row_click", convert_row_to_input)  
+  
+observeEvent(input$click_row, {
+  x <- input$click_row
+  
+  drug <- x$Drug
+  cyto <- x$Cytokine
+  
+  print(drug)
+  print(cyto)
+  
+  updateSelectInput(session, inputId="drug", selected = drug)
+  updateSelectInput(session, inputId="cytokine", selected= cyto)
+  
+})
+
+output$corr_plot <- renderPlot({
+
+    out_plot <- amlprojectdata:::plot_corr(combo(), cyto_list, drug_list)
+    out_plot
+})
+
+```
