@@ -1,0 +1,154 @@
+---
+title: "Correlation Dashboard"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: fill
+runtime: shiny
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(shiny)
+library(naniar)
+library(plotly)
+library(dplyr)
+library(heatmaply)
+library(reactable)
+library(cicerone)
+
+source("R/tour.R")
+source("R/helper.R")
+load("data/data.RData")
+drug_names <- names(drug_list)
+cyto_names <- names(cyto_list)
+use_cicerone()
+```
+
+Column {data-width=500 .tabset}
+-----------------------------------------------------------------------
+
+### Correlation Table
+
+```{r}
+corrs <- reactive({
+  correlations %>%
+    filter(FDR < input$fdr)
+})
+
+guide$init()$start()
+
+
+fillCol(flex=c(NA,1), 
+        inputPanel(
+  sliderInput("fdr", "FDR Cutoff", min=0, max=1, value=0.05)
+),
+
+reactableOutput("react")
+
+)
+
+
+
+```
+
+### Heatmap
+
+```{r}
+fillCol(
+plotlyOutput("heat")
+)
+output$heat <- renderPlotly({
+  out_map <- heatmaply::heatmaply(correlation_mat2)
+
+  out_map %>%
+      event_register("plotly_click")
+  
+})
+```
+
+
+Column {data-width=500}
+-----------------------------------------------------------------------
+
+### Cytokine/Drug Correlations
+
+```{r}
+fillCol(flex=c(NA,1),
+  inputPanel(
+    selectInput("drug", "Select Drug of Interest", 
+                choices = drug_names, selected = drug_names[1]),
+    selectInput("cytokine", "Select Cytokine of Interest", 
+                choices = cyto_names, selected=cyto_names[[1]])
+  ),
+  plotOutput("corr_plot")
+)
+
+
+output$react <- renderReactable(
+  
+  reactable(corrs(), sortable = TRUE, pageSizeOptions = 100, searchable = TRUE,       
+  onClick = JS("function(rowInfo, colInfo){
+            if (window.Shiny){
+            Shiny.setInputValue('click_row', {row_num: rowInfo.index + 1})
+            }
+            }")
+          
+          
+          )
+
+  
+)
+
+  combo <- reactive({
+    Var2 <- input$cytokine
+    Var1 <- input$drug
+    
+    out_list <- list(Var1=Var1, Var2=Var2)
+    
+    return(out_list)
+  })
+
+convert_row_to_input <- function(x, session, inputname){
+  row_num <- x[["row_num"]]
+  return(row_num)
+}
+
+#registerInputHandler("row_click", convert_row_to_input)  
+  
+observeEvent(input$click_row, {
+  
+  row_num <- input$click_row[["row_num"]]
+  x <- corrs()[row_num,]
+  
+  drug <- x$Drug
+  cyto <- x$Cytokine
+ 
+  updateSelectInput(session, inputId="drug", selected = drug)
+  updateSelectInput(session, inputId="cytokine", selected= cyto)
+  
+})
+
+
+observeEvent(event_data("plotly_click"), {
+   click_event <- event_data("plotly_click")
+   print(click_event)
+   
+   drug <- matrows[click_event$y]
+   cyto <- matcols[click_event$x]
+   
+   print(drug)
+   print(cyto)
+   
+   updateSelectInput(session, inputId="drug", selected = drug)
+   updateSelectInput(session, inputId="cytokine", selected= cyto)
+   
+})
+
+output$corr_plot <- renderPlot({
+
+    out_plot <- plot_corr(combo(), cyto_list, drug_list)
+    out_plot
+})
+
+```
