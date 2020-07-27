@@ -16,6 +16,7 @@ library(dplyr)
 library(heatmaply)
 library(reactable)
 library(cicerone)
+library(rintrojs)
 
 source("R/tour.R")
 source("R/helper.R")
@@ -121,8 +122,10 @@ observeEvent(input$click_row, {
   row_num <- input$click_row[["row_num"]]
   x <- corrs()[row_num,]
   
-  drug <- x$Drug
-  cyto <- x$Cytokine
+  print(x)
+  
+  drug <- x$drug
+  cyto <- x$cytokine
  
   updateSelectInput(session, inputId="drug", selected = drug)
   updateSelectInput(session, inputId="cytokine", selected= cyto)
