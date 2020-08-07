@@ -1,0 +1,103 @@
+---
+title: "Reactable Click Example"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: fill
+runtime: shiny_prerendered
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(dplyr)
+library(sparkline)
+library(reactable)
+library(here)
+library(plotly)
+load("data/crime_data_stat.rda")
+
+# this is the main tibble that we use for the reactable
+# we also use this to select which offense_category to display
+# on the right
+out_tab <- crime_data_stat %>%
+  group_by(offense_category) %>%
+  summarize(count = list(count)) %>%
+  mutate(sparkline = NA)
+```
+
+Column {data-width=300}
+-----------------------------------------------------------------------
+
+### Overview Table
+
+```{r echo=FALSE}
+fillCol(flex=c(NA),
+reactableOutput("reactable")
+)        
+```
+
+```{r context="server"}
+output$reactable <- renderReactable({
+  
+  reactable(out_tab, 
+            columns = 
+              list(count = colDef(show=FALSE),
+                sparkline = colDef(
+                  cell= function(value, index){
+                            sparkline(out_tab$count[[index]])
+                  })),
+              
+            onClick = JS("function(rowInfo, colInfo){
+            if (window.Shiny){ 
+                Shiny.setInputValue(
+                  'click_row', {row_num: rowInfo.index + 1})
+              }
+            }")
+          )
+          
+})
+
+```
+
+
+Column {data-width=300}
+-----------------------------------------------------------------------
+
+### Zoom in of Sparkline
+
+```{r, echo=FALSE}
+fillCol(flex = c(NA, 1), 
+    selectInput("crime_type", 
+                label = "Select Crime Type", 
+                choices = out_tab$offense_category, selected = NULL),
+  plotlyOutput("select_plot")
+)
+```
+
+```{r context="server"}
+output$select_plot <- renderPlotly({
+  
+  req(input$crime_type)
+  
+  out_plot <- crime_data_stat %>%
+    filter(offense_category == input$crime_type) %>%
+    ggplot() + aes(x=crime_yearmonth, y = count) +
+    geom_line()
+  
+  ggplotly(out_plot)
+})
+
+
+observeEvent(input$click_row, {
+  
+  row_num <- input$click_row[["row_num"]]
+  x <- out_tab[row_num,]
+  
+  cat <- x$offense_category
+
+  updateSelectInput(session, inputId="crime_type", selected = cat)
+
+})
+
+```
