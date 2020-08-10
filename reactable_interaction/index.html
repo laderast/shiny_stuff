@@ -2607,8 +2607,8 @@ window.FlexDashboardComponents.push({
 
 <div id="section-column" class="section level2" data-width="300">
 <h2>Column</h2>
-<div id="section-overview-table" class="section level3">
-<h3>Overview Table</h3>
+<div id="section-overview-table-click-on-a-row-to-see-the-data-on-the-right" class="section level3">
+<h3>Overview Table (Click on a row to see the data on the right)</h3>
 <div class="knitr-options" data-fig-width="576" data-fig-height="460">
 
 </div>
@@ -2662,14 +2662,14 @@ library(sparkline)
 library(reactable)
 library(here)
 library(plotly)
-load("data/crime_data_stat.rda")
+load(here("reactable_interaction/data/crime_data_stat.rda"))
 
 # this is the main tibble that we use for the reactable
 # we also use this to select which offense_category to display
 # on the right
 out_tab <- crime_data_stat %>%
   group_by(offense_category) %>%
-  summarize(count = list(count)) %>%
+  summarize(total_crimes = sum(count), count = list(count)) %>%
   mutate(sparkline = NA)
 </script>
  
@@ -2683,13 +2683,20 @@ output$reactable <- renderReactable({
                   cell= function(value, index){
                             sparkline(out_tab$count[[index]])
                   })),
-              
-            onClick = JS("function(rowInfo, colInfo){
-            if (window.Shiny){ 
+
+            # This is how we get the information from
+            # the reactable. 
+            onClick = 
+              JS("function(rowInfo, colInfo){
+              if (window.Shiny){ 
                 Shiny.setInputValue(
-                  'click_row', {row_num: rowInfo.index + 1})
-              }
-            }")
+                  'click_row', 
+                  {row_num: rowInfo.index + 1, 
+                   col_name: colInfo.id}
+                   )
+                 }   
+              }"
+            )
           )
           
 })
@@ -2712,11 +2719,21 @@ output$select_plot <- renderPlotly({
 
 observeEvent(input$click_row, {
   
+  print(input$click_row)
+  
+  #You can also do things with the colname
+  col_name <- input$click_row[["col_name"]]
+  
+  #we're mostly working with the row number
   row_num <- input$click_row[["row_num"]]
+  
+  #get the line in out_tab that has the row number
   x <- out_tab[row_num,]
   
+  #get the offense category of that row
   cat <- x$offense_category
 
+  #update the selectInput, which will trigger the plot
   updateSelectInput(session, inputId="crime_type", selected = cat)
 
 })
@@ -2729,7 +2746,7 @@ observeEvent(input$click_row, {
 <!--/html_preserve-->
 <!--html_preserve-->
 <script type="application/shiny-prerendered" data-context="execution_dependencies">
-{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["packages"]}},"value":[{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["packages","version"]},"class":{"type":"character","attributes":{},"value":["data.frame"]},"row.names":{"type":"integer","attributes":{},"value":[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63]}},"value":[{"type":"character","attributes":{},"value":["backports","base","colorspace","compiler","crayon","data.table","datasets","digest","dplyr","ellipsis","evaluate","fastmap","flexdashboard","generics","ggplot2","glue","graphics","grDevices","grid","gtable","here","htmltools","htmlwidgets","httpuv","httr","jsonlite","knitr","later","lazyeval","lifecycle","magrittr","methods","mime","munsell","pillar","pkgconfig","plotly","promises","purrr","R6","Rcpp","reactable","reactR","rlang","rmarkdown","rprojroot","scales","shiny","sparkline","stats","stringi","stringr","tibble","tidyr","tidyselect","tools","utils","vctrs","viridisLite","withr","xfun","xtable","yaml"]},{"type":"character","attributes":{},"value":["1.1.8","4.0.2","1.4-1","4.0.2","1.3.4","1.12.8","4.0.2","0.6.25","1.0.0","0.3.1","0.14","1.0.1","0.5.2","0.0.2","3.3.2","1.4.1","4.0.2","4.0.2","4.0.2","0.3.0","0.1","0.5.0","1.5.1","1.5.4","1.4.1","1.7.0","1.29","1.1.0.1","0.2.2","0.2.0","1.5","4.0.2","0.9","0.5.0","1.4.4","2.0.3","4.9.2.1","1.1.1","0.3.4","2.4.1","1.0.4.6","0.2.0","0.4.2","0.4.7","2.3","1.3-2","1.1.1","1.5.0.9000","2.0","4.0.2","1.4.6","1.4.0","3.0.3","1.1.0","1.1.0","4.0.2","4.0.2","0.3.1","0.3.0","2.2.0","0.15","1.8-4","2.2.1"]}]}]}
+{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["packages"]}},"value":[{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["packages","version"]},"class":{"type":"character","attributes":{},"value":["data.frame"]},"row.names":{"type":"integer","attributes":{},"value":[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67]}},"value":[{"type":"character","attributes":{},"value":["assertthat","backports","base","cli","colorspace","compiler","crayon","data.table","datasets","digest","dplyr","ellipsis","evaluate","fansi","fastmap","flexdashboard","generics","ggplot2","glue","graphics","grDevices","grid","gtable","here","htmltools","htmlwidgets","httpuv","httr","jsonlite","knitr","later","lazyeval","lifecycle","magrittr","methods","mime","munsell","packrat","pillar","pkgconfig","plotly","promises","purrr","R6","Rcpp","reactable","reactR","rlang","rmarkdown","rprojroot","scales","shiny","sparkline","stats","stringi","stringr","tibble","tidyr","tidyselect","tools","utils","vctrs","viridisLite","withr","xfun","xtable","yaml"]},{"type":"character","attributes":{},"value":["0.2.1","1.1.8","4.0.2","2.0.2","1.4-1","4.0.2","1.3.4","1.12.8","4.0.2","0.6.25","1.0.0","0.3.1","0.14","0.4.1","1.0.1","0.5.2","0.0.2","3.3.2","1.4.1","4.0.2","4.0.2","4.0.2","0.3.0","0.1","0.5.0","1.5.1","1.5.4","1.4.1","1.7.0","1.29","1.1.0.1","0.2.2","0.2.0","1.5","4.0.2","0.9","0.5.0","0.5.0","1.4.4","2.0.3","4.9.2.1","1.1.1","0.3.4","2.4.1","1.0.4.6","0.2.0","0.4.2","0.4.7","2.3","1.3-2","1.1.1","1.5.0.9000","2.0","4.0.2","1.4.6","1.4.0","3.0.3","1.1.0","1.1.0","4.0.2","4.0.2","0.3.1","0.3.0","2.2.0","0.15","1.8-4","2.2.1"]}]}]}
 </script>
 <!--/html_preserve-->
 </div>

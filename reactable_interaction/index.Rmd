@@ -15,21 +15,21 @@ library(sparkline)
 library(reactable)
 library(here)
 library(plotly)
-load("data/crime_data_stat.rda")
+load(here("reactable_interaction/data/crime_data_stat.rda"))
 
 # this is the main tibble that we use for the reactable
 # we also use this to select which offense_category to display
 # on the right
 out_tab <- crime_data_stat %>%
   group_by(offense_category) %>%
-  summarize(count = list(count)) %>%
+  summarize(total_crimes = sum(count), count = list(count)) %>%
   mutate(sparkline = NA)
 ```
 
 Column {data-width=300}
 -----------------------------------------------------------------------
 
-### Overview Table
+### Overview Table (Click on a row to see the data on the right)
 
 ```{r echo=FALSE}
 fillCol(flex=c(NA),
@@ -47,13 +47,20 @@ output$reactable <- renderReactable({
                   cell= function(value, index){
                             sparkline(out_tab$count[[index]])
                   })),
-              
-            onClick = JS("function(rowInfo, colInfo){
-            if (window.Shiny){ 
+
+            # This is how we get the information from
+            # the reactable. 
+            onClick = 
+              JS("function(rowInfo, colInfo){
+              if (window.Shiny){ 
                 Shiny.setInputValue(
-                  'click_row', {row_num: rowInfo.index + 1})
-              }
-            }")
+                  'click_row', 
+                  {row_num: rowInfo.index + 1, 
+                   col_name: colInfo.id}
+                   )
+                 }   
+              }"
+            )
           )
           
 })
@@ -91,11 +98,21 @@ output$select_plot <- renderPlotly({
 
 observeEvent(input$click_row, {
   
+  print(input$click_row)
+  
+  #You can also do things with the colname
+  col_name <- input$click_row[["col_name"]]
+  
+  #we're mostly working with the row number
   row_num <- input$click_row[["row_num"]]
+  
+  #get the line in out_tab that has the row number
   x <- out_tab[row_num,]
   
+  #get the offense category of that row
   cat <- x$offense_category
 
+  #update the selectInput, which will trigger the plot
   updateSelectInput(session, inputId="crime_type", selected = cat)
 
 })
