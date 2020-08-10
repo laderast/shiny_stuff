@@ -9,4 +9,4 @@ This is a repository cataloging how to interact with various HTMLwidgets. I am m
 # IntroJS notes
 
 - Using introjs with `flexdashboard`: To do 
-- Super useful: how to use introjs with multiple tabs (need to simulate tab-clicking) https://stackoverflow.com/questions/39545002/multi-page-intro-js-with-shiny
+- Super useful: how to use introjs with multiple tabs (need to simulate tab-clicking with JavaScript) https://stackoverflow.com/questions/39545002/multi-page-intro-js-with-shiny
