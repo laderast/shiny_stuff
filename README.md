@@ -3,7 +3,7 @@
 This is a repository cataloging how to interact with various HTMLwidgets. I am mostly making these for my own reference, but hopefully they will be helpful for other people.
 
 - [Reactable Interactions](reactable_interaction/index.Rmd) - This is an example of using reactable to monitor row-clicking events. If you click on a row in the reactable, the full dataset for that row will appear in the window on the right.
-- [heatmaply Interactions](heatmaply_interaction/index.Rmd)This is an example to monitor cell-clicking events for `heatmaply`.
+- [networkD3 Interactions](networkD3_interaction/index.Rmd) - This is an example to monitor cell-clicking events for `networkD3`.
 
 
 # IntroJS notes
