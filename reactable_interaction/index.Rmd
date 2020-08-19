@@ -49,7 +49,7 @@ output$reactable <- renderReactable({
                   })),
 
             # This is how we get the information from
-            # the reactable. 
+            # the reactable - it goes into input$click_row
             onClick = 
               JS("function(rowInfo, colInfo){
               if (window.Shiny){ 
@@ -95,7 +95,7 @@ output$select_plot <- renderPlotly({
   ggplotly(out_plot)
 })
 
-
+# Monitor input$click_row for changes
 observeEvent(input$click_row, {
   
   print(input$click_row)
@@ -112,7 +112,7 @@ observeEvent(input$click_row, {
   #get the offense category of that row
   cat <- x$offense_category
 
-  #update the selectInput, which will trigger the plot
+  #update the selectInput, which will trigger the plot change
   updateSelectInput(session, inputId="crime_type", selected = cat)
 
 })

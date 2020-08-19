@@ -1,0 +1,83 @@
+---
+title: "networkD3 Interactions"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: fill
+runtime: shiny_prerendered
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(igraphdata)
+library(networkD3)
+library(shiny)
+library(dplyr)
+library(reactable)
+```
+
+```{r context="data"}
+data(kite)
+kite_mat <- igraph::as_long_data_frame(kite)
+kite_d3 <- igraph_to_networkD3(kite)
+
+kite_d3$nodes$name <- c(unique(kite_mat$from_Firstname), "Jack")
+kite_d3$nodes$group <- c(rep(1,5), rep(2,5))
+```
+
+
+Column {data-width=400}
+-----------------------------------------------------------------------
+
+### Click on a node to see its connections on the right table
+
+```{r}
+networkD3::forceNetworkOutput("simple_net", width = "80%", height="80%")
+```
+
+```{r context="server"}
+script <- "if (window.Shiny){ 
+                Shiny.setInputValue(
+                  'click', 
+                  {name: d.name}
+                   )
+                 }"
+
+output$simple_net <- renderForceNetwork({
+  networkD3::forceNetwork(Links = kite_d3$links, Nodes = kite_d3$nodes, NodeID = "name", Group = "group",
+                           clickAction = script)
+  
+})
+
+```
+
+
+Column {data-width=400}
+-----------------------------------------------------------------------
+
+### Connection Info Should Show Here
+
+```{r}
+reactableOutput("node_table")
+```
+
+
+```{r context="server"}
+output$node_table <- renderReactable({
+  reactable(node_data())
+})
+
+node_data <- reactive({
+
+  req(input$click$name)
+  out <- kite_mat
+  out <- out %>%
+        select(from_Firstname, to_Firstname) %>%
+        filter(from_Firstname == input$click$name |
+                 to_Firstname == input$click$name)
+
+  return(out)
+  
+})
+```
+
