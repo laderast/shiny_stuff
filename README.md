@@ -9,7 +9,8 @@ The biggest gains are in learning:
 - `flexdashboard`
 - Shiny Modules
 - `shinytest`
-- HTML/CSS/JavaScrpt
+- `rintrojs`
+- HTML/CSS/JavaScript
 
 ## Gallery of Shiny Apps with HTMLwidget Interactions
 
