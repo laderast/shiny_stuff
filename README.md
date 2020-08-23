@@ -1,4 +1,8 @@
-# Gallery of Shiny Apps with HTMLwidget Interactions
+# Shiny: Drawing the Owl
+
+This is my attempt to catalog new shiny things I've learned.
+
+## Gallery of Shiny Apps with HTMLwidget Interactions
 
 This is a repository cataloging how to interact with various HTMLwidgets. I am mostly making these for my own reference, but hopefully they will be helpful for other people.
 
@@ -6,21 +10,21 @@ This is a repository cataloging how to interact with various HTMLwidgets. I am m
 - [networkD3 Interactions](networkD3_interaction/index.Rmd) - This is an example to monitor cell-clicking events for `networkD3`.
 
 
-# IntroJS notes
+## IntroJS notes
 
 - Using introjs with `flexdashboard`: To do 
 - Super useful: how to use introjs with multiple tabs (need to simulate tab-clicking with JavaScript) https://stackoverflow.com/questions/39545002/multi-page-intro-js-with-shiny
 
-# Why `flexdashboard`? 
+## Why `flexdashboard`? 
 
-## Pros
+### Pros
 
 - ui layouts such as `sidebarLayout()` cause the *nested bracket issue*
 - can be really hard to debug, based on misplaced commas/brackets
 - `flexdashboard` definitely cuts down on these by removing the layout functions
 - can be a little more friendly to different browser window sizes
 
-## Cons
+### Cons
 
 - `flexbox` is different and can be confusing to learn the parameters
 - `shiny_prerendered` as a runtime requires knowledge of code chunk contexts:
