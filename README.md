@@ -33,3 +33,8 @@ This is a repository cataloging how to interact with various HTMLwidgets. I am m
   - ui elements don't need a context
  - Best practices are to use shiny modules here
   
+## Why Shiny Modules?
+
+- Keeps the code cleaner
+- Namespacing lets you reuse the same code in the application
+- Makes testing easier
