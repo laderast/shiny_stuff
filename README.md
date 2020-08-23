@@ -4,6 +4,8 @@ This is my attempt to catalog new shiny things I've learned.
 
 ## Gallery of Shiny Apps with HTMLwidget Interactions
 
+[JS events for Shiny](https://shiny.rstudio.com/articles/js-events.html)
+
 This is a repository cataloging how to interact with various HTMLwidgets. I am mostly making these for my own reference, but hopefully they will be helpful for other people.
 
 - [Reactable Interactions](reactable_interaction/index.Rmd) - This is an example of using reactable to monitor row-clicking events. If you click on a row in the reactable, the full dataset for that row will appear in the window on the right.
