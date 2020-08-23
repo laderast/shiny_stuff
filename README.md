@@ -40,3 +40,7 @@ This is a repository cataloging how to interact with various HTMLwidgets. I am m
 - Keeps the code cleaner
 - Namespacing lets you reuse the same code in the application
 - Makes testing easier
+
+## Going farther by learning HTML/CSS/JavaScript
+
+- Garrick Aden-Buie's [JavaScript for Shiny Users](https://js4shiny.com)
