@@ -14,8 +14,8 @@ The biggest gains are in learning:
 
 ## Gallery of Shiny Apps with HTMLwidget Interactions
 
-[JS Build Widget](http://shiny.rstudio.com.s3-website-us-east-1.amazonaws.com/articles/js-build-widget.html)
 [JS events for Shiny](https://shiny.rstudio.com/articles/js-events.html)
+
 
 This is a repository cataloging how to interact with various HTMLwidgets. I am mostly making these for my own reference, but hopefully they will be helpful for other people.
 
@@ -55,6 +55,15 @@ In general, you need to add an `onclick` argument with invoking the HTMLwidget t
 - Keeps the code cleaner
 - Namespacing lets you reuse the same code in the application
 - Makes testing easier
+ 
+## HTMLWidgets and JavaScript
+
+This series is really helpful.
+
+- [JS Build Widget](http://shiny.rstudio.com.s3-website-us-east-1.amazonaws.com/articles/js-build-widget.html)
+- [Add Functionality to JS Widgets](http://shiny.rstudio.com.s3-website-us-east-1.amazonaws.com/articles/js-widget-functionality.html)
+- [How to send messages from the browser to server and back](http://shiny.rstudio.com.s3-website-us-east-1.amazonaws.com/articles/js-send-message.html)
+- [JS Custom Inputs](http://shiny.rstudio.com.s3-website-us-east-1.amazonaws.com/articles/js-custom-input.html)
 
 ## Going farther by learning HTML/CSS/JavaScript
 
