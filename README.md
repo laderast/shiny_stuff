@@ -23,6 +23,7 @@ This is a repository cataloging how to interact with various HTMLwidgets. I am m
 - can be really hard to debug, based on misplaced commas/brackets
 - `flexdashboard` definitely cuts down on these by removing the layout functions
 - can be a little more friendly to different browser window sizes
+- flexible - can be used with static visualizations (htmlwidgets) and shiny
 
 ### Cons
 
