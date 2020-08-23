@@ -12,6 +12,8 @@ This is a repository cataloging how to interact with various HTMLwidgets. I am m
 
 ## IntroJS notes
 
+`intro.js` lets you wrap UI elements with helpful tutorial text. 
+
 - Using introjs with `flexdashboard`: To do 
 - Super useful: how to use introjs with multiple tabs (need to simulate tab-clicking with JavaScript) https://stackoverflow.com/questions/39545002/multi-page-intro-js-with-shiny
 
