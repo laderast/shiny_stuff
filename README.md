@@ -8,7 +8,7 @@ This is my attempt to catalog new shiny things I've learned.
 
 This is a repository cataloging how to interact with various HTMLwidgets. I am mostly making these for my own reference, but hopefully they will be helpful for other people.
 
-In general, you need to add an `onclick` argument with invoking the HTMLwidget to update a Shiny Input. This value for this argument is usually wrapped in `htmlwidgets::JS()`.
+In general, you need to add an `onclick` argument with invoking the HTMLwidget to update a Shiny Input. This value for this argument is usually wrapped in `htmlwidgets::JS()`. You'll need to look at the HTML structure of the widget to figure out how to return the value you're interested in.
 
 - [Reactable Interactions](reactable_interaction/index.Rmd) - This is an example of using reactable to monitor row-clicking events. If you click on a row in the reactable, the full dataset for that row will appear in the window on the right.
 - [networkD3 Interactions](networkD3_interaction/index.Rmd) - This is an example to monitor cell-clicking events for `networkD3`.
