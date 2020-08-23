@@ -46,3 +46,4 @@ This is a repository cataloging how to interact with various HTMLwidgets. I am m
 ## Going farther by learning HTML/CSS/JavaScript
 
 - Garrick Aden-Buie's [JavaScript for Shiny Users](https://js4shiny.com)
+- [Style your Apps with CSS](https://shiny.rstudio.com/articles/css.html)
