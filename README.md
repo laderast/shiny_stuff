@@ -2,8 +2,18 @@
 
 This is my attempt to catalog new shiny things I've learned.
 
+## Big Gains
+
+The biggest gains are in learning:
+
+- `flexdashboard`
+- Shiny Modules
+- `shinytest`
+- HTML/CSS/JavaScrpt
+
 ## Gallery of Shiny Apps with HTMLwidget Interactions
 
+[JS Build Widget](http://shiny.rstudio.com.s3-website-us-east-1.amazonaws.com/articles/js-build-widget.html)
 [JS events for Shiny](https://shiny.rstudio.com/articles/js-events.html)
 
 This is a repository cataloging how to interact with various HTMLwidgets. I am mostly making these for my own reference, but hopefully they will be helpful for other people.
