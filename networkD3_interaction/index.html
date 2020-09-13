@@ -2635,7 +2635,6 @@ window.FlexDashboardComponents.push({
 
 <script type="application/shiny-prerendered" data-context="server-start">
 library(flexdashboard)
-library(igraphdata)
 library(networkD3)
 library(shiny)
 library(dplyr)
@@ -2643,6 +2642,8 @@ library(reactable)
 </script>
  
 <script type="application/shiny-prerendered" data-context="data">
+library(igraphdata)
+#this is where the data comes from
 data(kite)
 kite_mat <- igraph::as_long_data_frame(kite)
 kite_d3 <- igraph_to_networkD3(kite)
