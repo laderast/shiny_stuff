@@ -70,6 +70,12 @@ This series is really helpful.
 - Garrick Aden-Buie's [JavaScript for Shiny Users](https://js4shiny.com)
 - [Style your Apps with CSS](https://shiny.rstudio.com/articles/css.html)
 
+## JavaScript for R
+
+This book is really awesome. One of the best explanations for building an `htmlwidget` I've ever seen. 
+
+https://book.javascript-for-r.com/
+
 ## Password Authentication
 
 [shinymanager package](https://datastorm-open.github.io/shinymanager/) - uses encrypted SQLite database for storing credentials
